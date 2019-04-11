@@ -3,7 +3,6 @@ package com.codenotfound.ws.endpoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
@@ -29,11 +28,11 @@ public class HelloWorldEndpoint {
 		LOGGER.info("Endpoint received person[firstName={},lastName={}]", request.getFirstName(),
 				request.getLastName());
 
-		String greeting = "Hello " + request.getFirstName() + " " + request.getLastName() + "!";
+		String greeting = "Hello " + request.getFirstName() + " " + request.getLastName() + "! Your id is ";
 
-		System.out.println("yahoooo");
+		LOGGER.info("yahoooo");
 
-		this.demo();
+		greeting = greeting + this.addCustomer(request.getFirstName(), request.getLastName());
 
 		ObjectFactory factory = new ObjectFactory();
 		Greeting response = factory.createGreeting();
@@ -41,6 +40,14 @@ public class HelloWorldEndpoint {
 
 		LOGGER.info("Endpoint sending greeting='{}'", response.getGreeting());
 		return response;
+	}
+	
+	public String addCustomer(String firstName, String lastName) {
+		Customer newCustomer = customerRepository.save(new Customer(firstName, lastName));
+		
+		LOGGER.info("New customer - " +newCustomer);
+		
+		return newCustomer.getId().toString();
 	}
 
 	public void demo() {
